@@ -16,7 +16,7 @@
     }
     for($i=$numero_decisoes, $x = 1; $x<=$numero_restricoes+1; $i++, $x++){
       if($x == $numero_restricoes+1){
-        $variaveis[$i] = 'Lucro';  
+        $variaveis[$i] = 'Z';  
       }else{
         $variaveis[$i] = 'F'.$x;
       } 
@@ -29,7 +29,7 @@
     }
     for($i=$numero_decisoes, $x = 0; $x<=$numero_restricoes; $i++, $x++){
       if($x==$numero_restricoes){
-        $tipo[$i] = 'Lucro';
+        $tipo[$i] = 'Z';
       }else{
         $tipo[$i] = 'Restrição';
       }
@@ -61,6 +61,11 @@
           $vlr_final[$i]=0;
         }
       }
+    }
+    if($_SESSION['problema']=='Minimizar'){
+      $vlr_final[$numero_de_linhas+2]=$coluna_b[$numero_de_linhas]*(-1);
+    }else{
+      $vlr_final[$numero_de_linhas+2]=$coluna_b[$numero_de_linhas]  ;
     }
     //coluna var básica
     $var_basica = [];
@@ -264,7 +269,7 @@
         <?php for($x =0, $f=1;$x<=$numero_de_linhas; $x++, $f++){ 
             echo "<tr>";
             if($x==$numero_de_linhas){
-                echo"<td>Lucro</td>";    
+                echo"<td>Z</td>";    
             }else{
                 echo"<td>".$coluna_variaveis[$x]."</td>";
             }
@@ -277,8 +282,25 @@
         </tbody>
       </table>
   </div>
+  <div>
+  <h3>Interpretação dos Resultados</h3>
+  <?php for($y =0,  $x = 1;$y<$numero_decisoes; $y++, $x++):?>
+    <hr/>
+    <div class="row">
+      <p><?="X".$x?></p><p><?=": ".$vlr_final[$y]?></p><p><?="=> ".$_SESSION['descricao_X'][$y]?></p> 
+    </div>
+    <?php endfor; ?>
 
+    <?php for($y =0, $i=$numero_decisoes, $x = 1;$y<$numero_restricoes; $y++, $i++, $x++):?>
+      <hr/>
+    <div class="row">
+      <p><?="F".$x?></p><p><?=": ".$vlr_final[$i]?></p><p><?="=> ".$_SESSION['descricao_F'][$y]?></p>
+    </div>
+    <?php endfor; ?>
+  </div>
+  
   <div class="row">
+      <h3>Análise de Sensibilidade</h3>
         <table class="table table-bordered">
         
         <thead>

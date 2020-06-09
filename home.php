@@ -20,7 +20,15 @@
               Simplex
             </div>
             <div class="card-body">
-              <form action="tabela_inicial.php" method="post">
+            <form  action="tabela_inicial.php" method="post">
+                    <div class="form-group">
+                      <label>Maximizar ou Minimizar</label>
+                      <select name="problema" class="form-control">
+                        <option>Maximizar</option>
+                        <option>Minimizar</option>
+                      </select>
+                    </div>
+
                     <div class="form-group">
                       <label>Limite máximo de interações</label>
                       <select name="interacoes" class="form-control">
