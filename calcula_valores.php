@@ -1,6 +1,8 @@
 <?php 
 session_start();
-
+$_SESSION['intera']=0;
+$_SESSION['descricao_F']=$_POST['descricao_F'];
+$_SESSION['descricao_X']=$_POST['descricao_X'];
 $interacoes = $_SESSION['interacoes'];
 $luc=1000;
 $coluna;
@@ -26,8 +28,11 @@ foreach($solucao_inicial as $key=>$e){
     $valor_inicial[$key] = $e[$numero_de_colunas];
 }
 $_SESSION['valor_inicial']=$valor_inicial;//valor inicial da analise de sensibilidade
-
+$solucao_parcial=[];//valor para tabela parcial
+$_SESSION['inter']=0;//index da tabela parcial
+$inter=0;
 for($i = 0; $i < $interacoes; $i++){
+    $_SESSION['index_final']=$i;//index da interação que chegou a solução ótima
     foreach($solucao_inicial[$numero_de_linhas] as $key=>$lucro){//localiza a coluna com o maior numero negativo
         if($lucro<$luc){
             $luc=$lucro;
@@ -44,7 +49,6 @@ for($i = 0; $i < $interacoes; $i++){
     foreach($tmp as $key=>$e){
             $entra_na_base[$key] = $solucao_inicial[$e][$coluna];
     }
-    echo '<br>entra na base: '.print_r($entra_na_base);echo '<br>';
 
     $sai_da_base = [];
     foreach($entra_na_base as $key=>$e){
@@ -60,28 +64,15 @@ for($i = 0; $i < $interacoes; $i++){
     }
     $X=$coluna+1;//numero da variavel de decisão a entrar na base
     $coluna_variaveis[$linha]= 'X'.$X;//insere na coluna de variaveis a coluna que entra na base
-    echo 'Coluna de variaveis'; print_r($coluna_variaveis); echo '<br>';
-    echo 'menor valor: '.$var.'e o index eh: '.$linha;
-    echo '<br>';
-    echo 'coluna: '.$coluna;
-    echo '<br>';    
-    echo 'menor valor: '.$luc;
-    echo '<br>';
-    echo 'linha que sai da base';print_r($sai_da_base);
-    echo '<br>';
-    echo '<br>';
-    echo '<br>';
     $luc =0;
     $var = 1000;
     $pivo = $solucao_inicial[$linha][$coluna];
-    echo 'Pivo: '.$pivo;
 
     foreach($solucao_inicial[$linha] as $key=>$a){
         $solucao_inicial[$linha][$key]=$a/$pivo;
     }
 
     $linha_que_entra = $solucao_inicial[$linha];
-    echo 'linha que entra na base';print_r($linha_que_entra);
 
     $tabela_aux = [];
     foreach($solucao_inicial as $key=>$post){
@@ -92,38 +83,25 @@ for($i = 0; $i < $interacoes; $i++){
     $tabela_aux[$linha]=$solucao_inicial[$linha];
     $negativo = null;
     $solucao_inicial=$tabela_aux;
+    $solucao_parcial[$inter]=$solucao_inicial;
+    $inter++;
     foreach($solucao_inicial[$numero_de_linhas] as $key=>$p){
         if($p<0){
             $negativo = $p;
         }
     }
-    if(isset($negativo)){
-        echo "<br>Variavel Negativa ".$negativo."<br>"; 
+    if(isset($negativo)){ 
         $solucao_otima=false;
     }else{
         $solucao_otima=true;
-        echo '<br>';
-        echo '<br>';
-        foreach($solucao_inicial as $key=>$s){
-            print_r($s);
-            echo '<br>';    
-        }
-        echo '<br>';
-        echo '<br>';
         break;
     }
-    echo '<br>';
-    echo '<br>';
-    foreach($solucao_inicial as $key=>$s){
-        print_r($s);
-        echo '<br>';    
-    }
-    echo '<br>';
-    echo '<br>';
-    $negativo=null;
-    
+   $negativo=null;
+
 }
+$_SESSION['inter']=0;
+$_SESSION['solucao_parcial']=$solucao_parcial;
 $_SESSION['final'] = $solucao_inicial;
 $_SESSION['coluna_variaveis'] = $coluna_variaveis;
-header('Location: tabela.php');
+header('Location: solucao_inicial.php');
 ?>
