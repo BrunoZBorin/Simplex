@@ -62,10 +62,11 @@
         }
       }
     }
+  
     if($_SESSION['problema']=='Minimizar'){
-      $vlr_final[$numero_de_linhas+2]=$coluna_b[$numero_de_linhas]*(-1);
+      $vlr_final[$numero_de_colunas]=$coluna_b[$numero_de_linhas]*(-1);
     }else{
-      $vlr_final[$numero_de_linhas+2]=$coluna_b[$numero_de_linhas]  ;
+      $vlr_final[$numero_de_colunas]=$coluna_b[$numero_de_linhas]  ;
     }
     //coluna var básica
     $var_basica = [];
